@@ -31,9 +31,11 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                api(libs.activity.compose)
-                api(libs.appcompat)
-                api(libs.core.ktx)
+                api(libs.androidx.activity.compose)
+                api(libs.androidx.appcompat)
+                api(libs.androidx.core.ktx)
+
+                implementation(libs.sqldelight.android.driver)
             }
         }
         val iosX64Main by getting
@@ -44,6 +46,10 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+
+            dependencies {
+                implementation(libs.sqldelight.native.driver)
+            }
         }
     }
 }
