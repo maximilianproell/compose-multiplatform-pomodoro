@@ -1,4 +1,4 @@
-package com.myapplication
+package com.compose.multiplatform.pomodoro
 
 import MainView
 import android.os.Bundle

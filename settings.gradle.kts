@@ -1,4 +1,4 @@
-rootProject.name = "MyApplication"
+rootProject.name = "ComposeKMPPomodoro"
 
 include(":androidApp")
 include(":shared")
