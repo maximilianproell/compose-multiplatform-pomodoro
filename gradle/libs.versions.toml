@@ -1,0 +1,15 @@
+[versions]
+activityCompose = "1.8.0"
+appcompat = "1.6.1"
+coreKtx = "1.12.0"
+sqlDelight = "2.0.0"
+
+[libraries]
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
+
+[plugins]
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }

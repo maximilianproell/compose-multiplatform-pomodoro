@@ -2,10 +2,11 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("org.jetbrains.compose")
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
-    androidTarget()
+    android()
 
     listOf(
         iosX64(),
@@ -30,9 +31,9 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                api("androidx.activity:activity-compose:1.8.0")
-                api("androidx.appcompat:appcompat:1.6.1")
-                api("androidx.core:core-ktx:1.12.0")
+                api(libs.activity.compose)
+                api(libs.appcompat)
+                api(libs.core.ktx)
             }
         }
         val iosX64Main by getting
@@ -64,5 +65,13 @@ android {
     }
     kotlin {
         jvmToolchain(17)
+    }
+}
+
+sqldelight {
+    databases {
+        create("PomodoroDatabase") {
+            packageName.set("com.compose.multiplatform.pomodoro.storage")
+        }
     }
 }
