@@ -3,6 +3,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.compose")
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -29,11 +30,18 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(compose.animation)
                 implementation(compose.materialIconsExtended)
+
+                // Navigation with voyager
                 implementation(libs.voyager.navigator)
+
+                // Moko resources
+                implementation(libs.moko.resources)
+                implementation(libs.moko.resources.compose)
             }
         }
         val androidMain by getting {
             dependencies {
+                dependsOn(commonMain)
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
@@ -85,6 +93,10 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = composeVersion
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "com.compose.multiplatform.pomodoro"
 }
 
 sqldelight {
