@@ -27,6 +27,9 @@ kotlin {
                 implementation(compose.material3)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+                implementation(compose.animation)
+                implementation(compose.materialIconsExtended)
+                implementation(libs.voyager.navigator)
             }
         }
         val androidMain by getting {
@@ -36,6 +39,9 @@ kotlin {
                 api(libs.androidx.core.ktx)
 
                 implementation(libs.sqldelight.android.driver)
+
+                implementation(compose.preview)
+                implementation(compose.uiTooling)
             }
         }
         val iosX64Main by getting
@@ -71,6 +77,13 @@ android {
     }
     kotlin {
         jvmToolchain(17)
+    }
+    buildFeatures {
+        compose = true
+    }
+    val composeVersion = extra["compose.version"] as String
+    composeOptions {
+        kotlinCompilerExtensionVersion = composeVersion
     }
 }
 
