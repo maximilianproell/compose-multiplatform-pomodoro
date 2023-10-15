@@ -1,6 +1,7 @@
 package ui.screens.main
 
 import cafe.adriel.voyager.core.model.StateScreenModel
+import kotlinx.coroutines.flow.update
 
 class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainScreenState()) {
 
@@ -17,5 +18,15 @@ class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainSc
         INITIAL, RUNNING, PAUSED
     }
 
+    fun onTimerButtonClick() {
+        when (state.value.timerState) {
+            TimerState.INITIAL, TimerState.PAUSED -> mutableState.update { it.copy(timerState = TimerState.RUNNING) }
+            TimerState.RUNNING -> mutableState.update { it.copy(timerState = TimerState.PAUSED) }
+        }
+    }
+
+    fun onStopTimerClick() {
+        TODO()
+    }
 
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
-    <string name="pause">Pause</string>
+    <string name="timer_start">Start</string>
+    <string name="timer_stop">Stop</string>
+    <string name="timer_pause">Pause</string>
+    <string name="timer_continue">Continue</string>
 </resources>
