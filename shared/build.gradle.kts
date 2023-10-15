@@ -37,6 +37,9 @@ kotlin {
                 // Moko resources
                 implementation(libs.moko.resources)
                 implementation(libs.moko.resources.compose)
+
+                // Kotlinx Datetime
+                implementation(libs.kotlinx.datetime)
             }
         }
         val androidMain by getting {
