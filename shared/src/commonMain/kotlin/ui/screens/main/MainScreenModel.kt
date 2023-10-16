@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds
 
 class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainScreenState()) {
@@ -21,11 +22,17 @@ class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainSc
     )
 
     private fun startCountdownFlow(initialSeconds: Int) = flow {
-        var currentCountdownValue = initialSeconds
+        val startTimestampInSeconds = Clock.System.now().epochSeconds
+
+        // Immediately emit the initial seconds left.
         emit(initialSeconds)
         while (true) {
             kotlinx.coroutines.delay(1.seconds)
-            emit(--currentCountdownValue)
+            val currentEpochTimestamp = Clock.System.now().epochSeconds
+
+            // Subtract seconds passed since timer was started.
+            val secondsPassed = (currentEpochTimestamp - startTimestampInSeconds).toInt()
+            emit(initialSeconds - secondsPassed)
         }
         // Buffer values so that timer runs without hindrance.
     }.conflate()
