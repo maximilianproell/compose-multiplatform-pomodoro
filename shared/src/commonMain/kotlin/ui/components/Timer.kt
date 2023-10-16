@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.alpha
 
 @Composable
 fun Timer(
-    timerSecondsLeft: Long,
+    timerSecondsLeft: Int,
     isTimerPaused: Boolean,
 ) {
     val timerOpacityAnimation by rememberInfiniteTransition(label = "infinite").animateFloat(

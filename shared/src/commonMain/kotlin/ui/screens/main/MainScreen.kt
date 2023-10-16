@@ -53,7 +53,7 @@ object MainScreen : Screen {
                 verticalArrangement = Arrangement.Center
             ) {
                 Timer(
-                    timerSecondsLeft = 300,
+                    timerSecondsLeft = screenState.secondsLeft,
                     isTimerPaused = screenState.timerState == MainScreenModel.TimerState.PAUSED,
                 )
 

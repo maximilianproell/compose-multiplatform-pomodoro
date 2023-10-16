@@ -1,12 +1,11 @@
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import ui.screens.main.MainScreen
+import ui.theme.PomodoroAppTheme
 
 @Composable
 fun App() {
-    MaterialTheme {
-
+    PomodoroAppTheme {
         Navigator(MainScreen)
     }
 }
