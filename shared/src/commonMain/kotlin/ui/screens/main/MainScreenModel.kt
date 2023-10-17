@@ -3,20 +3,27 @@ package ui.screens.main
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import co.touchlab.kermit.Logger
+import domain.model.WorkPackage
+import domain.repository.WorkPackageRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import kotlin.time.Duration.Companion.seconds
 
-class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainScreenState()) {
+class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainScreenState()), KoinComponent {
 
     private val logger = Logger.withTag(this::class.simpleName ?: "")
+    private val workPackageRepository: WorkPackageRepository = get()
 
     companion object {
-        const val POMODORO_TIMER_INITIAL_SECONDS = 25 * 60
+        const val POMODORO_TIMER_INITIAL_SECONDS = 5 // TODO: change back, just for testing
     }
 
     data class MainScreenState(
@@ -77,6 +84,32 @@ class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainSc
                 mutableState.update {
                     it.copy(secondsLeft = secondsLeft)
                 }
+
+                if (secondsLeft <= 0) {
+                    saveProgressAndResetTimer()
+                    stopTimer()
+                }
+            }
+        }
+    }
+
+    private fun saveProgressAndResetTimer() {
+        coroutineScope.launch {
+            workPackageRepository.insertWorkPackage(
+                WorkPackage(
+                    // TODO: set correct start time
+                    startDate = Clock.System.now().toLocalDateTime(
+                        TimeZone.currentSystemDefault()
+                    ),
+                    minutes = 5, // TODO: set correct time worked
+                )
+            )
+
+            mutableState.update {
+                it.copy(
+                    secondsLeft = POMODORO_TIMER_INITIAL_SECONDS,
+                    timerState = TimerState.INITIAL
+                )
             }
         }
     }

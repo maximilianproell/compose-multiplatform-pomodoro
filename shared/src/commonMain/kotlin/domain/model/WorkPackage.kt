@@ -1,9 +1,8 @@
-package data.database.entity
+package domain.model
 
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
-data class WorkPackageEntity(
+data class WorkPackage(
     val id: Long = 0,
     val startDate: LocalDateTime,
     val minutes: Long,

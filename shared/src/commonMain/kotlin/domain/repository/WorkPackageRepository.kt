@@ -1,7 +1,10 @@
 package domain.repository
 
-import data.database.entity.WorkPackageEntity
+import domain.model.WorkPackage
+import kotlinx.coroutines.flow.Flow
 
 interface WorkPackageRepository {
-    suspend fun insertWorkPackage(workPackageEntity: WorkPackageEntity)
+    suspend fun insertWorkPackage(workPackage: WorkPackage)
+
+    suspend fun observeAllWorkPackages(): Flow<List<WorkPackage>>
 }

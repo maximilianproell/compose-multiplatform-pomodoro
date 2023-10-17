@@ -31,6 +31,9 @@ kotlin {
                 implementation(compose.animation)
                 implementation(compose.materialIconsExtended)
 
+                // SQLDelight coroutines extension
+                implementation(libs.sqldelight.coroutines)
+
                 // Navigation with voyager
                 implementation(libs.voyager.navigator)
 
