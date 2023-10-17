@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun Timer(
@@ -52,6 +53,6 @@ private fun TimerText(text: String, modifier: Modifier) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.displayLarge
+        fontSize = 74.sp
     )
 }

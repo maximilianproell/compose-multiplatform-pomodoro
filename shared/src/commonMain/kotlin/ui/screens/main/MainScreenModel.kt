@@ -2,6 +2,7 @@ package ui.screens.main
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flow
@@ -11,6 +12,8 @@ import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds
 
 class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainScreenState()) {
+
+    private val logger = Logger.withTag(this::class.simpleName ?: "")
 
     companion object {
         const val POMODORO_TIMER_INITIAL_SECONDS = 25 * 60

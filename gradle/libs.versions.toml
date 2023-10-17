@@ -6,6 +6,7 @@ sqlDelight = "2.0.0"
 voyager = "1.0.0-rc07"
 moko = "0.23.0"
 kotlinxDatetime = "0.4.1"
+kermit = "2.0.2"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -17,6 +18,7 @@ sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", versi
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko" }
+touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 [plugins]
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }

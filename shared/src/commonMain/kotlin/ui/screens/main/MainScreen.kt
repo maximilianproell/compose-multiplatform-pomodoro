@@ -6,9 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,9 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.compose.multiplatform.pomodoro.MR
 import dev.icerock.moko.resources.compose.stringResource
 import ui.components.Timer
+import ui.screens.settings.SettingsScreen
 
 
 object MainScreen : Screen {
@@ -34,13 +42,26 @@ object MainScreen : Screen {
             MainScreenModel()
         }
 
+        val navigator = LocalNavigator.currentOrThrow
         val screenState by mainScreenModel.state.collectAsState()
 
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
-                        Text("Pomodoro")
+                        Text(stringResource(MR.strings.pomodoro_title))
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            navigator.push(SettingsScreen)
+                        }) {
+                            Icon(imageVector = Icons.Default.Settings, contentDescription = null)
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = {}) {
+                            Icon(imageVector = Icons.Default.BarChart, contentDescription = null)
+                        }
                     }
                 )
             }

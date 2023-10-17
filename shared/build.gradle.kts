@@ -40,6 +40,9 @@ kotlin {
 
                 // Kotlinx Datetime
                 implementation(libs.kotlinx.datetime)
+
+                // Kermit multiplatform logger
+                implementation(libs.touchlab.kermit)
             }
         }
         val androidMain by getting {
