@@ -31,6 +31,7 @@ import com.compose.multiplatform.pomodoro.MR
 import dev.icerock.moko.resources.compose.stringResource
 import ui.components.Timer
 import ui.screens.settings.SettingsScreen
+import ui.screens.statistics.StatisticsScreen
 
 
 object MainScreen : Screen {
@@ -59,7 +60,9 @@ object MainScreen : Screen {
                         }
                     },
                     actions = {
-                        IconButton(onClick = {}) {
+                        IconButton(onClick = {
+                            navigator.push(StatisticsScreen)
+                        }) {
                             Icon(imageVector = Icons.Default.BarChart, contentDescription = null)
                         }
                     }

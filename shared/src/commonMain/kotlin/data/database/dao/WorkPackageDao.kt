@@ -11,8 +11,10 @@ import kotlinx.coroutines.withContext
 
 class WorkPackageDao(private val pomodoroDatabase: PomodoroDatabase) {
     suspend fun insert(workPackageEntity: WorkPackageEntity) = withContext(Dispatchers.IO) {
+        // ID of 0 is considered not set
+        val idToInsert = if (workPackageEntity.id == 0L) null else workPackageEntity.id
         pomodoroDatabase.workPackageQueries.insert(
-            id = workPackageEntity.id,
+            id = idToInsert,
             startDate = workPackageEntity.startDate,
             minutes = workPackageEntity.minutes,
         )
