@@ -43,6 +43,9 @@ kotlin {
 
                 // Kermit multiplatform logger
                 implementation(libs.touchlab.kermit)
+
+                // Koin dependency injection framework
+                implementation(libs.koin.core)
             }
         }
         val androidMain by getting {
@@ -56,6 +59,9 @@ kotlin {
 
                 implementation(compose.preview)
                 implementation(compose.uiTooling)
+
+                // Koin dependency injection framework
+                api(libs.koin.android)
             }
         }
         val iosX64Main by getting
