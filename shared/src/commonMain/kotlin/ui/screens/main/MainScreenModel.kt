@@ -23,7 +23,8 @@ class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainSc
     private val workPackageRepository: WorkPackageRepository = get()
 
     companion object {
-        const val POMODORO_TIMER_INITIAL_SECONDS = 5 // TODO: change back, just for testing
+        const val POMODORO_TIMER_INITIAL_MINUTES = 25
+        const val POMODORO_TIMER_INITIAL_SECONDS = POMODORO_TIMER_INITIAL_MINUTES * 60
     }
 
     data class MainScreenState(
@@ -101,7 +102,7 @@ class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainSc
                     startDate = Clock.System.now().toLocalDateTime(
                         TimeZone.currentSystemDefault()
                     ),
-                    minutes = 5, // TODO: set correct time worked
+                    minutes = POMODORO_TIMER_INITIAL_MINUTES.toLong(),
                 )
             )
 
