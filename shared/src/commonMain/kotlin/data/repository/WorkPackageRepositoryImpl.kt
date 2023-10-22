@@ -16,7 +16,7 @@ class WorkPackageRepositoryImpl(
         workPackageDao.insert(workPackage.toEntity())
     }
 
-    override suspend fun observeAllWorkPackages(): Flow<List<WorkPackage>> {
+    override fun observeAllWorkPackages(): Flow<List<WorkPackage>> {
         return workPackageDao.observeAllWorkPackages().map { entities ->
             entities.map(WorkPackageEntity::toDomain)
         }

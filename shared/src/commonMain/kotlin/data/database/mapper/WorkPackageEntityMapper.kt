@@ -6,12 +6,12 @@ import kotlinx.datetime.toLocalDateTime
 
 fun WorkPackageEntity.toDomain(): WorkPackage = WorkPackage(
     id = id,
-    startDate = startDate.toLocalDateTime(),
+    endDate = endDate.toLocalDateTime(),
     minutes = minutes,
 )
 
 fun WorkPackage.toEntity(): WorkPackageEntity = WorkPackageEntity(
     id = id,
-    startDate = startDate.toString(),
+    endDate = endDate.toString(),
     minutes = minutes,
 )

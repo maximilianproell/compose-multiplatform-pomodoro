@@ -29,6 +29,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.compose.multiplatform.pomodoro.MR
 import dev.icerock.moko.resources.compose.stringResource
+import service.TimerService
 import ui.components.Timer
 import ui.screens.settings.SettingsScreen
 import ui.screens.statistics.StatisticsScreen
@@ -77,15 +78,15 @@ object MainScreen : Screen {
                 verticalArrangement = Arrangement.Center
             ) {
                 Timer(
-                    timerSecondsLeft = screenState.secondsLeft,
-                    isTimerPaused = screenState.timerState == MainScreenModel.TimerState.PAUSED,
+                    timerSecondsLeft = screenState.timerState.secondsLeft,
+                    isTimerPaused = screenState.timerState is TimerService.TimerState.Paused,
                 )
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     AnimatedVisibility(
-                        visible = screenState.timerState == MainScreenModel.TimerState.PAUSED,
+                        visible = screenState.timerState is TimerService.TimerState.Paused,
                     ) {
                         OutlinedButton(
                             onClick = mainScreenModel::onStopTimerClick
@@ -98,9 +99,9 @@ object MainScreen : Screen {
                         onClick = mainScreenModel::onTimerButtonClick
                     ) {
                         val buttonTextId = when (screenState.timerState) {
-                            MainScreenModel.TimerState.INITIAL -> MR.strings.timer_start
-                            MainScreenModel.TimerState.RUNNING -> MR.strings.timer_pause
-                            MainScreenModel.TimerState.PAUSED -> MR.strings.timer_continue
+                            TimerService.TimerState.Initial -> MR.strings.timer_start
+                            is TimerService.TimerState.Running -> MR.strings.timer_pause
+                            is TimerService.TimerState.Paused -> MR.strings.timer_continue
                         }
                         Text(text = stringResource(buttonTextId))
                     }

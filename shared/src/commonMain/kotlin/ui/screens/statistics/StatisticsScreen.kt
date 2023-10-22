@@ -55,7 +55,7 @@ object StatisticsScreen : Screen {
                 items(screenState.workPackages) {
                     Row {
                         Text(it.id.toString())
-                        Text(it.startDate.toString())
+                        Text(it.endDate.toString())
                         Text(it.minutes.toString())
                     }
                 }

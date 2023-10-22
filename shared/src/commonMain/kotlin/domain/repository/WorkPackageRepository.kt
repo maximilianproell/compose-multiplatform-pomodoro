@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface WorkPackageRepository {
     suspend fun insertWorkPackage(workPackage: WorkPackage)
 
-    suspend fun observeAllWorkPackages(): Flow<List<WorkPackage>>
+    fun observeAllWorkPackages(): Flow<List<WorkPackage>>
 }

@@ -15,12 +15,12 @@ class WorkPackageDao(private val pomodoroDatabase: PomodoroDatabase) {
         val idToInsert = if (workPackageEntity.id == 0L) null else workPackageEntity.id
         pomodoroDatabase.workPackageQueries.insert(
             id = idToInsert,
-            startDate = workPackageEntity.startDate,
+            endDate = workPackageEntity.endDate,
             minutes = workPackageEntity.minutes,
         )
     }
 
-    suspend fun observeAllWorkPackages(): Flow<List<WorkPackageEntity>> =
+    fun observeAllWorkPackages(): Flow<List<WorkPackageEntity>> =
         pomodoroDatabase.workPackageQueries
             .getAll()
             .asFlow()
