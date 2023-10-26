@@ -27,6 +27,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import co.touchlab.kermit.Logger
 import com.compose.multiplatform.pomodoro.MR
 import dev.icerock.moko.resources.compose.stringResource
 import service.TimerService
@@ -37,6 +38,8 @@ import ui.screens.statistics.StatisticsScreen
 
 object MainScreen : Screen {
 
+    private val logger = Logger.withTag(this::class.simpleName.toString())
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -46,6 +49,14 @@ object MainScreen : Screen {
 
         val navigator = LocalNavigator.currentOrThrow
         val screenState by mainScreenModel.state.collectAsState()
+
+        mainScreenModel.permissionController.NotificationPermissionRequester(
+            askForPermission = screenState.showNotificationPermissionRequest,
+            onResult = { granted ->
+                mainScreenModel.updateNotificationPermissionState(granted)
+            },
+            onPermissionRequestShown = mainScreenModel::onPermissionRequestShown
+        )
 
         Scaffold(
             topBar = {
@@ -96,7 +107,13 @@ object MainScreen : Screen {
                     }
 
                     Button(
-                        onClick = mainScreenModel::onTimerButtonClick
+                        onClick = {
+                            val timerInInitialState = screenState.timerState is TimerService.TimerState.Initial
+                            if (!screenState.hasPermissionForNotifications && timerInInitialState) {
+                                mainScreenModel.showNotificationPermissionRequest()
+                            }
+                            mainScreenModel.onTimerButtonClick()
+                        }
                     ) {
                         val buttonTextId = when (screenState.timerState) {
                             TimerService.TimerState.Initial -> MR.strings.timer_start

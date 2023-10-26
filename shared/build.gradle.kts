@@ -65,6 +65,9 @@ kotlin {
 
                 // Koin dependency injection framework
                 api(libs.koin.android)
+
+                // Accompanist permissions
+                implementation(libs.accompanist.permissions)
             }
         }
         val iosX64Main by getting

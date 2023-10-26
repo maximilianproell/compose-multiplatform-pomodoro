@@ -5,7 +5,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import platform.Foundation.NSDateComponents
-import platform.UserNotifications.UNAuthorizationOptionBadge
+import platform.UserNotifications.UNAuthorizationStatusAuthorized
 import platform.UserNotifications.UNCalendarNotificationTrigger
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationRequest
@@ -27,11 +27,12 @@ actual class NotificationService actual constructor(private val timerService: Ti
 
         val notificationCenter = UNUserNotificationCenter.currentNotificationCenter()
 
-        logger.d { "Asking for notification permission" }
-        // TODO: ask for notification permission right at start of app
-        notificationCenter.requestAuthorizationWithOptions(UNAuthorizationOptionBadge) { granted, _ ->
-            logger.d { "permission is granted = $granted" }
-            if (granted) {
+        // Check if permission is granted
+        notificationCenter.getNotificationSettingsWithCompletionHandler { settings ->
+            logger.d { "Checking for notification permission." }
+            if (settings?.authorizationStatus == UNAuthorizationStatusAuthorized) {
+                logger.d { "Notification permission granted. Scheduling notification." }
+
                 val notificationContent = UNMutableNotificationContent().apply {
                     setTitle("Work finished!") // TODO: use resource
                     setBody("Well done! Now take a short break.") // TODO: use resource
@@ -67,6 +68,8 @@ actual class NotificationService actual constructor(private val timerService: Ti
                         logger.e { "received error on addNotificationRequest: $it" }
                     }
                 }
+            } else {
+                logger.d { "No permission to show notification." }
             }
         }
     }

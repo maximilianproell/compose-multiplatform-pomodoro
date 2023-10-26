@@ -7,16 +7,20 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import permission.PermissionController
 import service.TimerService
 
 class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainScreenState()), KoinComponent {
 
     private val logger = Logger.withTag(this::class.simpleName ?: "")
     private val timerService: TimerService = get()
+    val permissionController = PermissionController()
 
     data class MainScreenState(
         val timerState: TimerService.TimerState = TimerService.TimerState.Initial,
         val showStopTimerAlert: Boolean = false,
+        val hasPermissionForNotifications: Boolean = false,
+        val showNotificationPermissionRequest: Boolean = false,
     )
 
     init {
@@ -32,6 +36,29 @@ class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainSc
     fun onTimerButtonClick() {
         logger.d { "Timer button clicked." }
         timerService.toggleTimer()
+    }
+
+    fun showNotificationPermissionRequest() {
+        mutableState.update {
+            it.copy(
+                showNotificationPermissionRequest = true,
+            )
+        }
+    }
+
+    fun onPermissionRequestShown() {
+        mutableState.update {
+            it.copy(
+                showNotificationPermissionRequest = false,
+            )
+        }
+    }
+
+    fun updateNotificationPermissionState(isGranted: Boolean) {
+        logger.d { "Notification permission state changed: Granted = $isGranted" }
+        mutableState.update {
+            it.copy(hasPermissionForNotifications = isGranted)
+        }
     }
 
     fun onStopTimerClick() {
