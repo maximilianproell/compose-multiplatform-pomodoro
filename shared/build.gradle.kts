@@ -38,14 +38,14 @@ kotlin {
                 implementation(libs.voyager.navigator)
 
                 // Moko resources
-                implementation(libs.moko.resources)
+                api(libs.moko.resources)
                 implementation(libs.moko.resources.compose)
 
                 // Kotlinx Datetime
                 implementation(libs.kotlinx.datetime)
 
                 // Kermit multiplatform logger
-                implementation(libs.touchlab.kermit)
+                api(libs.touchlab.kermit)
 
                 // Koin dependency injection framework
                 implementation(libs.koin.core)
@@ -68,6 +68,9 @@ kotlin {
 
                 // Accompanist permissions
                 implementation(libs.accompanist.permissions)
+
+                // Lifecycle service
+                api(libs.androidx.lifecycle.service)
             }
         }
         val iosX64Main by getting
@@ -88,7 +91,7 @@ kotlin {
 
 android {
     compileSdk = (findProperty("android.compileSdk") as String).toInt()
-    namespace = "com.compose.multiplatform.pomodoro.common"
+    namespace = "com.compose.multiplatform.pomodoro"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")

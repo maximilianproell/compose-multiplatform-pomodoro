@@ -5,4 +5,8 @@
     <string name="timer_pause">Pause</string>
     <string name="timer_continue">Continue</string>
     <string name="pomodoro_title">Pomodoro</string>
+    <string name="pomodoro_timer_channel_name">Pomodoro Timer</string>
+    <string name="pomodoro_timer_channel_description">Used to notify you when the timer is up.</string>
+    <string name="pomodoro_timer_notification_title">Pomodoro Timer</string>
+    <string name="pomodoro_timer_notification_content_text">Time left: %s</string>
 </resources>
