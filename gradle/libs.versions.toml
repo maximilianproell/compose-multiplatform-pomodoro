@@ -10,6 +10,7 @@ kermit = "2.0.2"
 koin = "3.5.0"
 accompanist = "0.32.0"
 lifecycle = "2.6.2"
+multiplatformSettings = "1.1.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -27,6 +28,8 @@ touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
+russhwolf-multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
+russhwolf-multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
 
 [plugins]
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }

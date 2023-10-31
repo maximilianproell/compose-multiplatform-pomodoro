@@ -10,5 +10,5 @@ import com.compose.multiplatform.pomodoro.service.di.serviceModule
  */
 fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
     appDeclaration()
-    modules(databaseModule, dataModule, serviceModule)
+    modules(dataModule, serviceModule)
 }

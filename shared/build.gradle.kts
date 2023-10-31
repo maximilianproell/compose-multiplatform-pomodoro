@@ -49,6 +49,10 @@ kotlin {
 
                 // Koin dependency injection framework
                 implementation(libs.koin.core)
+
+                // Multiplatform settings
+                implementation(libs.russhwolf.multiplatform.settings)
+                implementation(libs.russhwolf.multiplatform.settings.coroutines)
             }
         }
         val androidMain by getting {

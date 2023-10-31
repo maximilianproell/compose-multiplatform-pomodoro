@@ -5,6 +5,6 @@ import com.compose.multiplatform.pomodoro.service.NotificationService
 import com.compose.multiplatform.pomodoro.service.TimerService
 
 val serviceModule = module {
-    single { TimerService(get()) }
+    single { TimerService(get(), get()) }
     factory { NotificationService(get()) }
 }
