@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,18 +29,18 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import co.touchlab.kermit.Logger
 import com.compose.multiplatform.pomodoro.MR
-import dev.icerock.moko.resources.compose.stringResource
 import com.compose.multiplatform.pomodoro.service.TimerService
 import com.compose.multiplatform.pomodoro.ui.components.Timer
 import com.compose.multiplatform.pomodoro.ui.screens.settings.SettingsScreen
 import com.compose.multiplatform.pomodoro.ui.screens.statistics.StatisticsScreen
+import com.compose.multiplatform.pomodoro.utils.createLogger
+import dev.icerock.moko.resources.compose.stringResource
 
 
 object MainScreen : Screen {
 
-    private val logger = Logger.withTag(this::class.simpleName.toString())
+    private val logger = createLogger()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -57,6 +59,28 @@ object MainScreen : Screen {
             },
             onPermissionRequestShown = mainScreenModel::onPermissionRequestShown
         )
+
+        if (screenState.showStopTimerAlert) {
+            AlertDialog(
+                onDismissRequest = mainScreenModel::onDismissStopTimerAlert,
+                title = {
+                    Text(text = stringResource(MR.strings.pomodoro_timer_alert_stop_title))
+                },
+                text = {
+                    Text(text = stringResource(MR.strings.pomodoro_timer_alert_stop_text))
+                },
+                confirmButton = {
+                    TextButton(onClick = mainScreenModel::stopTimer) {
+                        Text(text = stringResource(MR.strings.confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = mainScreenModel::onDismissStopTimerAlert) {
+                        Text(text = stringResource(MR.strings.cancel))
+                    }
+                }
+            )
+        }
 
         Scaffold(
             topBar = {

@@ -63,8 +63,19 @@ class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainSc
 
     fun onStopTimerClick() {
         logger.d { "On stop timer clicked." }
-        // TODO: Ask with alert dialog if user really wants to stop the progress.
-        timerService.stopTimer()
+        mutableState.update {
+            it.copy(showStopTimerAlert = true)
+        }
     }
 
+    fun onDismissStopTimerAlert() {
+        mutableState.update {
+            it.copy(showStopTimerAlert = false)
+        }
+    }
+
+    fun stopTimer() {
+        onDismissStopTimerAlert()
+        timerService.stopTimer()
+    }
 }
