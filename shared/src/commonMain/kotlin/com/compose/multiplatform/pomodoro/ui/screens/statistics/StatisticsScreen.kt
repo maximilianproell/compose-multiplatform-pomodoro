@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import at.maximilianproell.multiplatformchart.barchart.BarChart
+import at.maximilianproell.multiplatformchart.barchart.model.BarChartEntry
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -50,8 +52,19 @@ object StatisticsScreen : Screen {
                     }
                 )
             }
-        ) {
-            LazyColumn(Modifier.fillMaxSize().padding(it)) {
+        ) { paddingValues ->
+            // TODO: Just for testing
+            BarChart(
+                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                entries = listOf(
+                    BarChartEntry("MO", 25f),
+                    BarChartEntry("DI", 50f),
+                    BarChartEntry("MI", 30f),
+                    BarChartEntry("DO", 60f),
+                ),
+                maxYValue = 60f,
+            )
+            /*LazyColumn(Modifier.fillMaxSize().padding(padding)) {
                 items(screenState.workPackages) {
                     Row {
                         Text(it.id.toString())
@@ -59,7 +72,7 @@ object StatisticsScreen : Screen {
                         Text(it.minutes.toString())
                     }
                 }
-            }
+            }*/
         }
     }
 }

@@ -53,6 +53,9 @@ kotlin {
                 // Multiplatform settings
                 implementation(libs.russhwolf.multiplatform.settings)
                 implementation(libs.russhwolf.multiplatform.settings.coroutines)
+
+                // Compose multiplatform charts
+                implementation(libs.compose.multiplatform.chart)
             }
         }
         val androidMain by getting {
@@ -114,9 +117,8 @@ android {
     buildFeatures {
         compose = true
     }
-    val composeVersion = extra["compose.version"] as String
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
 }
 
