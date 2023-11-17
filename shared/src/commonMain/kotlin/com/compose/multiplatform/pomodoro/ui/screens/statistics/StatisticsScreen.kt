@@ -56,7 +56,7 @@ object StatisticsScreen : Screen {
             BarChart(
                 modifier = Modifier.fillMaxSize().padding(paddingValues),
                 entries = screenState.barChartEntries,
-                maxYValue = 60f,
+                maxYValue = maxOf(1f, screenState.barChartEntries.maxOfOrNull { it.yValue } ?: 0f),
             )
         }
     }
