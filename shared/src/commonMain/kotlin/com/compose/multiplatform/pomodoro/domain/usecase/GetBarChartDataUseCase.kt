@@ -27,10 +27,11 @@ class GetBarChartDataUseCase : KoinComponent {
         val todayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
         val daysUntilSunday = daysUntilSundayFrom(todayDate)
         val sundayThisWeek = todayDate.plus(daysUntilSunday, DateTimeUnit.DAY)
-        val mondayThisWeek = sundayThisWeek.minus(7, DateTimeUnit.DAY)
+        val mondayThisWeek = sundayThisWeek.minus(6, DateTimeUnit.DAY)
 
         logger.d { "Today is: $todayDate" }
         logger.d { "Sunday this week: $sundayThisWeek" }
+        logger.d { "Monday this week: $mondayThisWeek" }
 
         val workPackages = workPackageRepository
             .observeAllWorkPackages()
@@ -38,13 +39,15 @@ class GetBarChartDataUseCase : KoinComponent {
             .filter { it.endDate.date >= mondayThisWeek }
 
         return buildList {
-            // 7 days per week
-            DayOfWeek.values().forEachIndexed { dayOfWeekIndex, dayOfWeek ->
+            DayOfWeek.values().forEach { dayOfWeek ->
+                val weekDayDate = mondayThisWeek.plus(dayOfWeek.ordinal, DateTimeUnit.DAY)
                 val minutesWorked = workPackages
-                    .filter { it.endDate.date == mondayThisWeek.plus(dayOfWeekIndex, DateTimeUnit.DAY) }
+                    // Filter for this specific day.
+                    .filter { it.endDate.date == weekDayDate }
                     .sumOf { it.minutes }
 
-                add(BarChartEntry(dayOfWeek.name.take(2).uppercase(), minutesWorked / 60f))
+                // TODO: localization of text.
+                add(BarChartEntry(dayOfWeek.name.take(2), minutesWorked / 60f))
             }
 
         }
