@@ -1,31 +1,51 @@
 package com.compose.multiplatform.pomodoro.ui.screens.statistics
 
-import at.maximilianproell.multiplatformchart.barchart.model.BarChartEntry
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
-import com.compose.multiplatform.pomodoro.domain.usecase.GetBarChartDataUseCase
+import com.compose.multiplatform.pomodoro.domain.repository.WorkPackageRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.periodUntil
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import kotlin.math.ceil
 
 class StatisticsScreenModel :
     StateScreenModel<StatisticsScreenModel.StatisticsScreenState>(StatisticsScreenState()),
     KoinComponent {
 
-    private val getBarChartDataUseCase: GetBarChartDataUseCase = GetBarChartDataUseCase()
+    private val workPackageRepository: WorkPackageRepository by inject()
 
     data class StatisticsScreenState(
-        val isLoading: Boolean = false,
-        val barChartEntries: List<BarChartEntry> = emptyList(),
+        val numberOfPages: Int = 1,
     )
 
     init {
-        mutableState.update { it.copy(isLoading = true) }
         coroutineScope.launch {
-            val barChartData = getBarChartDataUseCase()
-            mutableState.update {
-                it.copy(barChartEntries = barChartData)
+            val workPackages = workPackageRepository.observeAllWorkPackages().first()
+            val oldestDate = workPackages.firstOrNull()?.endDate
+
+            if (oldestDate != null) {
+                val instantPast = oldestDate.toInstant(TimeZone.currentSystemDefault())
+                val todayInstant = Clock.System.now()
+                val todayDate = todayInstant.toLocalDateTime(TimeZone.currentSystemDefault())
+                val period = instantPast.periodUntil(todayInstant, TimeZone.currentSystemDefault())
+
+                // Week must have passed, therefore add extra week.
+                val additionalWeek = if (oldestDate.dayOfWeek.ordinal >= todayDate.dayOfWeek.ordinal) 1 else 0
+                val numberOfPages = ceil(period.days / 7f).toInt() + additionalWeek
+
+                mutableState.update {
+                    it.copy(numberOfPages = numberOfPages)
+                }
+
             }
+
         }
     }
 }

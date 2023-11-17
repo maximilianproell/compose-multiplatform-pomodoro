@@ -23,24 +23,25 @@ class GetBarChartDataUseCase : KoinComponent {
     private val logger = createLogger()
     private val workPackageRepository: WorkPackageRepository by inject()
 
-    suspend operator fun invoke(): List<BarChartEntry> {
+    suspend operator fun invoke(weekOffsetFromCurrentWeek: Int): List<BarChartEntry> {
         val todayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
         val daysUntilSunday = daysUntilSundayFrom(todayDate)
         val sundayThisWeek = todayDate.plus(daysUntilSunday, DateTimeUnit.DAY)
         val mondayThisWeek = sundayThisWeek.minus(6, DateTimeUnit.DAY)
 
-        logger.d { "Today is: $todayDate" }
-        logger.d { "Sunday this week: $sundayThisWeek" }
-        logger.d { "Monday this week: $mondayThisWeek" }
+        val monday = mondayThisWeek.minus(weekOffsetFromCurrentWeek * 7, DateTimeUnit.DAY)
+        val sunday = sundayThisWeek.minus(weekOffsetFromCurrentWeek * 7, DateTimeUnit.DAY)
 
+        logger.d { "Getting data for week $monday - $sunday" }
+
+        // TODO: get correct range directly from DB for better performance.
         val workPackages = workPackageRepository
             .observeAllWorkPackages()
             .first()
-            .filter { it.endDate.date >= mondayThisWeek }
 
         return buildList {
             DayOfWeek.values().forEach { dayOfWeek ->
-                val weekDayDate = mondayThisWeek.plus(dayOfWeek.ordinal, DateTimeUnit.DAY)
+                val weekDayDate = monday.plus(dayOfWeek.ordinal, DateTimeUnit.DAY)
                 val minutesWorked = workPackages
                     // Filter for this specific day.
                     .filter { it.endDate.date == weekDayDate }
