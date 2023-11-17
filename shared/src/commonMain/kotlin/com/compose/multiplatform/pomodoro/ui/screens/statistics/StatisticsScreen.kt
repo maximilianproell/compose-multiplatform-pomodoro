@@ -53,26 +53,11 @@ object StatisticsScreen : Screen {
                 )
             }
         ) { paddingValues ->
-            // TODO: Just for testing
             BarChart(
                 modifier = Modifier.fillMaxSize().padding(paddingValues),
-                entries = listOf(
-                    BarChartEntry("MO", 25f),
-                    BarChartEntry("DI", 50f),
-                    BarChartEntry("MI", 30f),
-                    BarChartEntry("DO", 60f),
-                ),
+                entries = screenState.barChartEntries,
                 maxYValue = 60f,
             )
-            /*LazyColumn(Modifier.fillMaxSize().padding(padding)) {
-                items(screenState.workPackages) {
-                    Row {
-                        Text(it.id.toString())
-                        Text(it.endDate.toString())
-                        Text(it.minutes.toString())
-                    }
-                }
-            }*/
         }
     }
 }
