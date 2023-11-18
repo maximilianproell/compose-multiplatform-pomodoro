@@ -1,6 +1,7 @@
 package com.compose.multiplatform.pomodoro.domain.usecase
 
 import at.maximilianproell.multiplatformchart.barchart.model.BarChartEntry
+import com.compose.multiplatform.pomodoro.domain.model.BarChartData
 import com.compose.multiplatform.pomodoro.domain.repository.WorkPackageRepository
 import com.compose.multiplatform.pomodoro.utils.createLogger
 import kotlinx.coroutines.flow.first
@@ -15,15 +16,16 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-/**
- * Gets the chart data with the work data from the current week.
- */
 class GetBarChartDataUseCase : KoinComponent {
 
     private val logger = createLogger()
     private val workPackageRepository: WorkPackageRepository by inject()
 
-    suspend operator fun invoke(weekOffsetFromCurrentWeek: Int): List<BarChartEntry> {
+    /**
+     * Gets the chart data with the work data from the week with the given offset.
+     * @param weekOffsetFromCurrentWeek The offset from the current week, where an offset of 0 is the current week.
+     */
+    suspend operator fun invoke(weekOffsetFromCurrentWeek: Int): BarChartData {
         val todayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
         val daysUntilSunday = daysUntilSundayFrom(todayDate)
         val sundayThisWeek = todayDate.plus(daysUntilSunday, DateTimeUnit.DAY)
@@ -39,7 +41,7 @@ class GetBarChartDataUseCase : KoinComponent {
             .observeAllWorkPackages()
             .first()
 
-        return buildList {
+        val barChartEntries = buildList {
             DayOfWeek.values().forEach { dayOfWeek ->
                 val weekDayDate = monday.plus(dayOfWeek.ordinal, DateTimeUnit.DAY)
                 val minutesWorked = workPackages
@@ -52,6 +54,12 @@ class GetBarChartDataUseCase : KoinComponent {
             }
 
         }
+
+        return BarChartData(
+            fromDate = monday,
+            toDate = sunday,
+            barChartEntries = barChartEntries,
+        )
     }
 
     private fun daysUntilSundayFrom(localDate: LocalDate): Int =
