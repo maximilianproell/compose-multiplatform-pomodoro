@@ -20,6 +20,9 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ * This class handles the entire timer logic.
+ */
 class TimerService(
     private val workPackageRepository: WorkPackageRepository,
     private val settingsRepository: SettingsRepository,

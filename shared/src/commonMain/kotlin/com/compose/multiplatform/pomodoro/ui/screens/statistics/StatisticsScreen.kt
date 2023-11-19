@@ -23,7 +23,9 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.compose.multiplatform.pomodoro.MR
 import com.compose.multiplatform.pomodoro.ui.components.chart.WeeklyBarchart
+import dev.icerock.moko.resources.compose.stringResource
 
 object StatisticsScreen : Screen {
 
@@ -42,7 +44,7 @@ object StatisticsScreen : Screen {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text("Statistics")
+                        Text(stringResource(MR.strings.bar_chart_title_hours_worked))
                     },
                     navigationIcon = {
                         IconButton(onClick = {

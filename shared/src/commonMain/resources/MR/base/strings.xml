@@ -14,4 +14,6 @@
     <string name="pomodoro_timer_notification_content_text">Time left: %s</string>
     <string name="pomodoro_timer_alert_stop_title">Stop Timer</string>
     <string name="pomodoro_timer_alert_stop_text">Do you really want to stop the timer? Any progress will be lost.</string>
+    <string name="bar_chart_title_this_week">This week</string>
+    <string name="bar_chart_title_hours_worked">Hours worked</string>
 </resources>
