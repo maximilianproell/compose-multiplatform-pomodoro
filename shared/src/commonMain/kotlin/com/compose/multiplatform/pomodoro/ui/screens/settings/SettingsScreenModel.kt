@@ -3,6 +3,7 @@ package com.compose.multiplatform.pomodoro.ui.screens.settings
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import com.compose.multiplatform.pomodoro.domain.repository.SettingsRepository
+import com.compose.multiplatform.pomodoro.service.TimerService
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -13,12 +14,14 @@ class SettingsScreenModel : StateScreenModel<SettingsScreenModel.SettingsScreenS
     KoinComponent {
 
     private val settingsRepository: SettingsRepository by inject()
+    private val timerService: TimerService by inject()
 
     private val applicationScope = MainScope()
 
     data class SettingsScreenState(
         val isLoading: Boolean = true,
         val pomodoroTimerMinutes: Int? = null,
+        val inputBlocked: Boolean = false,
     )
 
     init {
@@ -28,6 +31,14 @@ class SettingsScreenModel : StateScreenModel<SettingsScreenModel.SettingsScreenS
                 pomodoroTimerMinutes = minutesDuration,
                 isLoading = false,
             ) }
+
+            timerService.timerStateFlow.collect { timerState ->
+                // Block changes to settings while timer is running.
+                val inputBlocked = timerState is TimerService.TimerState.Running || timerState is TimerService.TimerState.Paused
+                mutableState.update { settingsScreenState ->
+                    settingsScreenState.copy(inputBlocked = inputBlocked)
+                }
+            }
         }
     }
 
