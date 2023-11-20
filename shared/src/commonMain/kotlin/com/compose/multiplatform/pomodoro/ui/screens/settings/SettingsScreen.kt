@@ -65,6 +65,7 @@ object SettingsScreen : Screen {
                 )
             }
         ) { paddingValues ->
+            // TODO: Screen shot be locked for input while timer is running
             Box(contentAlignment = Alignment.Center) {
                 Column(modifier = Modifier.padding(paddingValues).padding(16.dp).fillMaxSize()) {
                     Row(
