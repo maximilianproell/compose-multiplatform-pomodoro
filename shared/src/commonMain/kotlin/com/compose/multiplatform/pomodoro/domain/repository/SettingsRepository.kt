@@ -15,4 +15,15 @@ interface SettingsRepository {
      * a new timestamp has been set with [saveTimerFinishTimestamp].
      */
     suspend fun removeTimerFinishTimestamp()
+
+
+    /**
+     * Saves the timer duration in minutes.
+     */
+    suspend fun saveTimerDurationMinutes(minutes: Int)
+
+    /**
+     * Returns the pomodoro timer duration in minutes.
+     */
+    suspend fun getTimerDurationMinutes(): Int
 }

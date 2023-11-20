@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -29,8 +30,7 @@ class TimerService(
 ) {
 
     companion object {
-        const val POMODORO_TIMER_INITIAL_MINUTES = 25
-        const val POMODORO_TIMER_INITIAL_SECONDS = POMODORO_TIMER_INITIAL_MINUTES * 60
+        const val POMODORO_TIMER_DEFAULT_MINUTES = 25
     }
 
     /**
@@ -43,7 +43,11 @@ class TimerService(
     // Normally, that would be injected for better testability
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    private val _timerStateFlow: MutableStateFlow<TimerState> = MutableStateFlow(TimerState.Initial)
+    private val _timerStateFlow: MutableStateFlow<TimerState> = MutableStateFlow(
+        TimerState.Initial(
+            secondsLeft = runBlocking { settingsRepository.getTimerDurationMinutes() * 60 }
+        )
+    )
     val timerStateFlow = _timerStateFlow.asStateFlow()
 
     init {
@@ -77,7 +81,10 @@ class TimerService(
      */
     fun stopTimer() {
         cancelTimer()
-        _timerStateFlow.value = TimerState.Initial
+        applicationScope.launch {
+            val initialSeconds = settingsRepository.getTimerDurationMinutes() * 60
+            _timerStateFlow.value = TimerState.Initial(initialSeconds)
+        }
     }
 
     /**
@@ -114,7 +121,7 @@ class TimerService(
      */
     fun toggleTimer() {
         when (val timerState = timerStateFlow.value) {
-            TimerState.Initial, is TimerState.Paused -> startTimer(timerState.secondsLeft)
+            is TimerState.Initial, is TimerState.Paused -> startTimer(timerState.secondsLeft)
             is TimerState.Running -> {
                 cancelTimer()
                 _timerStateFlow.value = TimerState.Paused(timerState.secondsLeft)
@@ -149,14 +156,14 @@ class TimerService(
                     endDate = Clock.System.now().toLocalDateTime(
                         TimeZone.currentSystemDefault()
                     ),
-                    minutes = POMODORO_TIMER_INITIAL_MINUTES.toLong(),
+                    minutes = settingsRepository.getTimerDurationMinutes().toLong(),
                 )
             )
         }
     }
 
     sealed class TimerState(val secondsLeft: Int) {
-        object Initial : TimerState(POMODORO_TIMER_INITIAL_SECONDS)
+        class Initial(secondsLeft: Int) : TimerState(secondsLeft)
         class Running(secondsLeft: Int) : TimerState(secondsLeft)
         class Paused(secondsLeft: Int) : TimerState(secondsLeft)
     }

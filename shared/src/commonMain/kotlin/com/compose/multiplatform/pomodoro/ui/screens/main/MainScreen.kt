@@ -140,7 +140,7 @@ object MainScreen : Screen {
                         }
                     ) {
                         val buttonTextId = when (screenState.timerState) {
-                            TimerService.TimerState.Initial -> MR.strings.timer_start
+                            is TimerService.TimerState.Initial -> MR.strings.timer_start
                             is TimerService.TimerState.Running -> MR.strings.timer_pause
                             is TimerService.TimerState.Paused -> MR.strings.timer_continue
                         }
