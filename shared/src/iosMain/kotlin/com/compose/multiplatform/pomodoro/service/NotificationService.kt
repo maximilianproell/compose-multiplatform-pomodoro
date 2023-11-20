@@ -1,6 +1,9 @@
 package com.compose.multiplatform.pomodoro.service
 
 import co.touchlab.kermit.Logger
+import com.compose.multiplatform.pomodoro.MR
+import dev.icerock.moko.resources.desc.Resource
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -33,9 +36,10 @@ actual class NotificationService actual constructor(private val timerService: Ti
             if (settings?.authorizationStatus == UNAuthorizationStatusAuthorized) {
                 logger.d { "Notification permission granted. Scheduling notification." }
 
+
                 val notificationContent = UNMutableNotificationContent().apply {
-                    setTitle("Work finished!") // TODO: use resource
-                    setBody("Well done! Now take a short break.") // TODO: use resource
+                    setTitle(StringDesc.Resource(MR.strings.notification_timer_finished_title).localized())
+                    setBody(StringDesc.Resource(MR.strings.notification_timer_finished_description).localized())
                     setSound(UNNotificationSound.defaultSound())
                 }
 
@@ -47,8 +51,8 @@ actual class NotificationService actual constructor(private val timerService: Ti
 
                 val date = NSDateComponents().apply {
                     hour = notificationTime.hour.toLong()
-                    minute = (notificationTime.minute).toLong()
-                    second = (notificationTime.second).toLong()
+                    minute = notificationTime.minute.toLong()
+                    second = notificationTime.second.toLong()
                 }
 
                 val trigger = UNCalendarNotificationTrigger.triggerWithDateMatchingComponents(
