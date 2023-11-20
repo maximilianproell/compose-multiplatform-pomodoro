@@ -1,5 +1,7 @@
 package com.compose.multiplatform.pomodoro.domain.repository
 
+import kotlinx.coroutines.flow.Flow
+
 interface SettingsRepository {
     suspend fun saveTimerFinishTimestamp(timestamp: Long)
 
@@ -26,4 +28,9 @@ interface SettingsRepository {
      * Returns the pomodoro timer duration in minutes.
      */
     suspend fun getTimerDurationMinutes(): Int
+
+    /**
+     * Returns a [Flow] emitting the most recently set timer duration in minutes.
+     */
+    fun observeTimerDurationMinutes(): Flow<Int>
 }

@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -44,15 +43,23 @@ class TimerService(
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     private val _timerStateFlow: MutableStateFlow<TimerState> = MutableStateFlow(
-        TimerState.Initial(
-            secondsLeft = runBlocking { settingsRepository.getTimerDurationMinutes() * 60 }
-        )
+        TimerState.Initial.withDefaultDuration
     )
     val timerStateFlow = _timerStateFlow.asStateFlow()
 
     init {
         logger.d { "Initial startup of TimerService" }
         applicationScope.launch {
+            launch {
+                logger.i { "Starting with set time duration observation" }
+                settingsRepository.observeTimerDurationMinutes().collect { currentlySetMinutes ->
+                    if (timerStateFlow.value is TimerState.Initial) {
+                        // Only when timer is still in the initial state we update the duration coming from the repo.
+                        _timerStateFlow.value = TimerState.Initial(currentlySetMinutes * 60)
+                    }
+                }
+            }
+
             logger.d { "Checking if timer should still be running." }
 
             // Check if timer should still be running. If yes, then start the timer.
@@ -163,7 +170,13 @@ class TimerService(
     }
 
     sealed class TimerState(val secondsLeft: Int) {
-        class Initial(secondsLeft: Int) : TimerState(secondsLeft)
+        class Initial(secondsLeft: Int) : TimerState(secondsLeft) {
+            companion object {
+                val withDefaultDuration: TimerState
+                    get() = Initial(POMODORO_TIMER_DEFAULT_MINUTES)
+            }
+        }
+
         class Running(secondsLeft: Int) : TimerState(secondsLeft)
         class Paused(secondsLeft: Int) : TimerState(secondsLeft)
     }

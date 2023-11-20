@@ -5,10 +5,11 @@ import com.compose.multiplatform.pomodoro.data.repository.SettingsRepositoryImpl
 import com.compose.multiplatform.pomodoro.domain.repository.SettingsRepository
 import com.compose.multiplatform.pomodoro.service.TimerService.Companion.POMODORO_TIMER_DEFAULT_MINUTES
 import com.russhwolf.settings.ExperimentalSettingsApi
-import com.russhwolf.settings.coroutines.SuspendSettings
+import com.russhwolf.settings.coroutines.FlowSettings
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalSettingsApi::class)
-class SettingsRepositoryImpl(private val settings: SuspendSettings) : SettingsRepository {
+class SettingsRepositoryImpl(private val settings: FlowSettings) : SettingsRepository {
 
     private object Constants {
         const val TIMER_FINISH_TIMESTAMP_KEY = "timestampFinishKey"
@@ -35,5 +36,9 @@ class SettingsRepositoryImpl(private val settings: SuspendSettings) : SettingsRe
 
     override suspend fun getTimerDurationMinutes(): Int {
         return settings.getInt(TIMER_DURATION_MINUTES, POMODORO_TIMER_DEFAULT_MINUTES)
+    }
+
+    override fun observeTimerDurationMinutes(): Flow<Int> {
+        return settings.getIntFlow(TIMER_DURATION_MINUTES, POMODORO_TIMER_DEFAULT_MINUTES)
     }
 }

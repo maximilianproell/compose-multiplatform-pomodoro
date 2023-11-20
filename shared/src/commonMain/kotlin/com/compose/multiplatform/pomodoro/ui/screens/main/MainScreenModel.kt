@@ -17,9 +17,7 @@ class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainSc
     val permissionController = PermissionController()
 
     data class MainScreenState(
-        val timerState: TimerService.TimerState = TimerService.TimerState.Initial(
-            TimerService.POMODORO_TIMER_DEFAULT_MINUTES * 60
-        ),
+        val timerState: TimerService.TimerState = TimerService.TimerState.Initial.withDefaultDuration,
         val showStopTimerAlert: Boolean = false,
         val hasPermissionForNotifications: Boolean = false,
         val showNotificationPermissionRequest: Boolean = false,
