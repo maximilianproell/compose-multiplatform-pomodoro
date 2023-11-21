@@ -24,9 +24,7 @@ struct iOSApp: App {
             lifecycleHelper.onAppMovedToBackGround()
         }
     }
-    
-    
-    
+
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
