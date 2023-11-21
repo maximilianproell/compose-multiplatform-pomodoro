@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.sp
 import com.compose.multiplatform.pomodoro.domain.usecase.FormatSecondsForTimerUseCase
 
@@ -34,8 +34,9 @@ fun Timer(
     Row(
         modifier = Modifier
             .wrapContentSize()
-            // TODO: optimize to prevent recompositions
-            .alpha(timerOpacityAnimation),
+            .graphicsLayer {
+                alpha = timerOpacityAnimation
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         TimerText(
