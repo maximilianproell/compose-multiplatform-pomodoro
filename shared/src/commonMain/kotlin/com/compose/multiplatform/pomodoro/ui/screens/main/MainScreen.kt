@@ -1,11 +1,19 @@
 package com.compose.multiplatform.pomodoro.ui.screens.main
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Settings
@@ -104,11 +112,11 @@ object MainScreen : Screen {
                     }
                 )
             }
-        ) {
+        ) { scaffoldPaddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it),
+                    .padding(scaffoldPaddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -118,15 +126,22 @@ object MainScreen : Screen {
                 )
 
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
                 ) {
                     AnimatedVisibility(
                         visible = screenState.timerState is TimerService.TimerState.Paused,
+                        enter = scaleIn() + expandHorizontally(),
+                        exit = scaleOut() + shrinkHorizontally(),
                     ) {
-                        OutlinedButton(
-                            onClick = mainScreenModel::onStopTimerClick
-                        ) {
-                            Text(text = stringResource(MR.strings.timer_stop))
+                        Row {
+                            OutlinedButton(
+                                onClick = mainScreenModel::onStopTimerClick
+                            ) {
+                                Text(text = stringResource(MR.strings.timer_stop))
+                            }
+
+                            Spacer(modifier = Modifier.size(16.dp))
                         }
                     }
 
@@ -144,7 +159,9 @@ object MainScreen : Screen {
                             is TimerService.TimerState.Running -> MR.strings.timer_pause
                             is TimerService.TimerState.Paused -> MR.strings.timer_continue
                         }
-                        Text(text = stringResource(buttonTextId))
+                        AnimatedContent(targetState = buttonTextId) {
+                            Text(text = stringResource(it))
+                        }
                     }
                 }
             }
