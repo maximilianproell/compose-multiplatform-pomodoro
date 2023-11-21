@@ -17,6 +17,7 @@
     <string name="bar_chart_title_this_week">This week</string>
     <string name="bar_chart_title_hours_worked">Hours worked</string>
     <string name="settings_title">Settings</string>
+    <string name="settings_pomodoro_minutes_label">Pomodoro timer duration in minutes</string>
     <string name="notification_timer_finished_title">Work finished!</string>
     <string name="notification_timer_finished_description">Well done! Now take a short break.</string>
 </resources>

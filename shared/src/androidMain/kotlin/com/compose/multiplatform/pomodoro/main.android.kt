@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-actual fun getPlatformName(): String = "Android"
+actual fun isIos(): Boolean = false
 
 @Composable fun MainView() {
     val view = LocalView.current

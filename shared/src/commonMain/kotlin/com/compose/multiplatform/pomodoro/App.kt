@@ -12,4 +12,4 @@ fun App() {
     }
 }
 
-expect fun getPlatformName(): String
+expect fun isIos(): Boolean

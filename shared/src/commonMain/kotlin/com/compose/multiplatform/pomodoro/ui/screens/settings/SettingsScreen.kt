@@ -10,11 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -36,6 +33,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.compose.multiplatform.pomodoro.MR
+import com.compose.multiplatform.pomodoro.ui.components.BackIcon
 import dev.icerock.moko.resources.compose.stringResource
 
 object SettingsScreen : Screen {
@@ -59,7 +57,7 @@ object SettingsScreen : Screen {
                     },
                     navigationIcon = {
                         IconButton(onClick = navigator::pop) {
-                            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                            BackIcon()
                         }
                     }
                 )
@@ -74,7 +72,7 @@ object SettingsScreen : Screen {
                     ) {
                         Text(
                             modifier = Modifier.weight(1f),
-                            text = "Pomodoro timer duration in minutes",
+                            text = stringResource(MR.strings.settings_pomodoro_minutes_label),
                             style = MaterialTheme.typography.titleMedium
                         )
 
