@@ -29,7 +29,8 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
 
     private val timerService: TimerService by inject()
     private val notificationChannelId = "pomodoro_timer_channel"
-    private val notificationId = 100
+    private val stickyNotificationId = 100
+    private val finishNotificationId = 101
     private val logger = Logger.withTag(this::class.simpleName.toString())
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -48,7 +49,7 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notificationBuilder = NotificationCompat.Builder(this, notificationChannelId)
+        val stickyNotificationBuilder = NotificationCompat.Builder(this, notificationChannelId)
             .setContentTitle(getString(MR.strings.pomodoro_timer_notification_title))
             .setSmallIcon(R.drawable.baseline_timer_24)
             .setOnlyAlertOnce(true)
@@ -62,12 +63,18 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
             )
             .setContentIntent(pendingIntent)
 
+        val alarmNotificationBuilder = NotificationCompat.Builder(this, notificationChannelId)
+            .setSmallIcon(R.drawable.baseline_timer_24)
+            .setContentTitle(getString(MR.strings.notification_timer_finished_title))
+            .setContentText(getString(MR.strings.notification_timer_finished_description))
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
 
         try {
             ServiceCompat.startForeground(
                 /* service = */ this,
-                /* id = */ notificationId, // Cannot be 0
-                /* notification = */ notificationBuilder.build(),
+                /* id = */ stickyNotificationId, // Cannot be 0
+                /* notification = */ stickyNotificationBuilder.build(),
                 /* foregroundServiceType = */ 0,
             )
         } catch (e: Exception) {
@@ -81,7 +88,7 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
         val notificationManager = NotificationManagerCompat.from(applicationContext)
         lifecycleScope.launch {
             timerService.timerStateFlow.collect { timerState ->
-                notificationBuilder.setContentText(
+                stickyNotificationBuilder.setContentText(
                     getString(
                         MR.strings.pomodoro_timer_notification_content_text,
                         FormatSecondsForTimerUseCase(timerState.secondsLeft)
@@ -89,12 +96,16 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
                 )
 
                 if (timerState is TimerService.TimerState.Initial) {
-                    notificationManager.cancel(notificationId)
+                    notificationManager.cancel(stickyNotificationId)
+                    notificationManager.notify(
+                        finishNotificationId,
+                        alarmNotificationBuilder.build()
+                    )
                     stopSelf()
                 } else {
                     notificationManager.notify(
-                        notificationId,
-                        notificationBuilder.build()
+                        stickyNotificationId,
+                        stickyNotificationBuilder.build()
                     )
                 }
             }
