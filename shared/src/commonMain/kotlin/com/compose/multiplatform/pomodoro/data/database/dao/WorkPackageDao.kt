@@ -25,4 +25,8 @@ class WorkPackageDao(private val pomodoroDatabase: PomodoroDatabase) {
             .getAll()
             .asFlow()
             .mapToList(Dispatchers.IO)
+
+    suspend fun getInRange(fromDate: String, toDate: String): List<WorkPackageEntity> = withContext(Dispatchers.IO) {
+        pomodoroDatabase.workPackageQueries.getInRange(fromDate, toDate).executeAsList()
+    }
 }

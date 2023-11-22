@@ -36,10 +36,7 @@ class GetBarChartDataUseCase : KoinComponent {
 
         logger.d { "Getting data for week $monday - $sunday" }
 
-        // TODO: get correct range directly from DB for better performance.
-        val workPackages = workPackageRepository
-            .observeAllWorkPackages()
-            .first()
+        val workPackages = workPackageRepository.getWorkPackagesInDataRange(fromDate = monday, toDate = sunday)
 
         val barChartEntries = buildList {
             DayOfWeek.values().forEach { dayOfWeek ->

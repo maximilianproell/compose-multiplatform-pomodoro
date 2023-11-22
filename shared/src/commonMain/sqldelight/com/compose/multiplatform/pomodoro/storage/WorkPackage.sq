@@ -4,9 +4,15 @@ CREATE TABLE IF NOT EXISTS WorkPackageEntity (
     minutes INTEGER NOT NULL
 );
 
+CREATE INDEX idx_endDate
+ON WorkPackageEntity (endDate);
+
 insert:
 INSERT INTO WorkPackageEntity(id, endDate, minutes)
 VALUES (?,?,?);
 
 getAll:
 SELECT * FROM WorkPackageEntity;
+
+getInRange:
+SELECT * FROM WorkPackageEntity WHERE endDate BETWEEN ? AND ?;
