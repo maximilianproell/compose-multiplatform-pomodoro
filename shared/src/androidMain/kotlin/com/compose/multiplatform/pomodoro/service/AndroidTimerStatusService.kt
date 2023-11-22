@@ -1,6 +1,5 @@
 package com.compose.multiplatform.pomodoro.service
 
-import com.compose.multiplatform.pomodoro.MainActivity
 import android.Manifest
 import android.app.ForegroundServiceStartNotAllowedException
 import android.app.PendingIntent
@@ -14,12 +13,13 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import co.touchlab.kermit.Logger
 import com.compose.multiplatform.pomodoro.MR
+import com.compose.multiplatform.pomodoro.MainActivity
 import com.compose.multiplatform.pomodoro.R
 import com.compose.multiplatform.pomodoro.domain.usecase.FormatSecondsForTimerUseCase
 import com.compose.multiplatform.pomodoro.utils.getString
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
+import org.koin.core.component.inject
 
 /**
  * This service is responsible for showing and updating a sticky notification, displaying the
@@ -27,7 +27,7 @@ import org.koin.core.component.get
  */
 class AndroidTimerStatusService : LifecycleService(), KoinComponent {
 
-    private val timerService: TimerService = get()
+    private val timerService: TimerService by inject()
     private val notificationChannelId = "pomodoro_timer_channel"
     private val notificationId = 100
     private val logger = Logger.withTag(this::class.simpleName.toString())
@@ -52,6 +52,7 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
             .setContentTitle(getString(MR.strings.pomodoro_timer_notification_title))
             .setSmallIcon(R.drawable.baseline_timer_24)
             .setOnlyAlertOnce(true)
+            .setSilent(true)
             .setOngoing(true)
             .setContentText(
                 getString(
@@ -77,7 +78,7 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
             }
         }
 
-
+        val notificationManager = NotificationManagerCompat.from(applicationContext)
         lifecycleScope.launch {
             timerService.timerStateFlow.collect { timerState ->
                 notificationBuilder.setContentText(
@@ -87,13 +88,14 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
                     )
                 )
 
-                NotificationManagerCompat.from(applicationContext).notify(
-                    notificationId,
-                    notificationBuilder.build()
-                )
-
                 if (timerState is TimerService.TimerState.Initial) {
+                    notificationManager.cancel(notificationId)
                     stopSelf()
+                } else {
+                    notificationManager.notify(
+                        notificationId,
+                        notificationBuilder.build()
+                    )
                 }
             }
         }
