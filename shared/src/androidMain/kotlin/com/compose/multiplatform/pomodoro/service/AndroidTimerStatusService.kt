@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import co.touchlab.kermit.Logger
 import com.compose.multiplatform.pomodoro.MR
+import com.compose.multiplatform.pomodoro.R
 import com.compose.multiplatform.pomodoro.domain.usecase.FormatSecondsForTimerUseCase
 import com.compose.multiplatform.pomodoro.utils.getString
 import kotlinx.coroutines.launch
@@ -49,7 +50,7 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
 
         val notificationBuilder = NotificationCompat.Builder(this, notificationChannelId)
             .setContentTitle(getString(MR.strings.pomodoro_timer_notification_title))
-            .setSmallIcon(androidx.core.R.drawable.notification_bg)
+            .setSmallIcon(R.drawable.baseline_timer_24)
             .setOnlyAlertOnce(true)
             .setOngoing(true)
             .setContentText(
