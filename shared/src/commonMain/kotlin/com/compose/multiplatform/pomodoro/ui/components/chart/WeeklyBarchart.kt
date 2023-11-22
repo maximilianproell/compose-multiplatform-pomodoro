@@ -29,6 +29,7 @@ import com.compose.multiplatform.pomodoro.domain.usecase.GetBarChartDataUseCase
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
+import kotlin.math.ceil
 
 @Composable
 fun WeeklyBarchart(
@@ -61,7 +62,7 @@ fun WeeklyBarchart(
             BarChart(
                 modifier = Modifier.fillMaxSize(),
                 entries = barChartData?.barChartEntries ?: emptyList(),
-                maxYValue = maxOf(1f, barChartData?.barChartEntries?.maxOfOrNull { it.yValue } ?: 0f),
+                maxYValue = maxOf(1f, barChartData?.barChartEntries?.maxOfOrNull { ceil(it.yValue) } ?: 0f),
             )
             if (barChartData == null) {
                 CircularProgressIndicator()
