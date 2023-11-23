@@ -73,7 +73,7 @@ object SettingsScreen : Screen {
                         Text(
                             modifier = Modifier.weight(1f),
                             text = stringResource(MR.strings.settings_pomodoro_minutes_label),
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.bodyLarge
                         )
 
                         val keyboardController = LocalSoftwareKeyboardController.current
