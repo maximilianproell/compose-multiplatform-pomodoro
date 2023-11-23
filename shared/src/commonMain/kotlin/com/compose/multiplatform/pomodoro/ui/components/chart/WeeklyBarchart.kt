@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import at.maximilianproell.multiplatformchart.barchart.BarChart
+import at.maximilianproell.multiplatformchart.common.AxisConfigDefaults
 import com.compose.multiplatform.pomodoro.MR
 import com.compose.multiplatform.pomodoro.domain.model.BarChartData
 import com.compose.multiplatform.pomodoro.domain.usecase.GetBarChartDataUseCase
@@ -60,15 +62,17 @@ fun WeeklyBarchart(
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             BarChart(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().padding(start = 28.dp),
                 entries = barChartData?.barChartEntries ?: emptyList(),
                 maxYValue = maxOf(1f, barChartData?.barChartEntries?.maxOfOrNull { ceil(it.yValue) } ?: 0f),
+                yAxisConfig = AxisConfigDefaults.yAxisConfigDefaults().copy(
+                    labelsXOffset = (-28).dp,
+                )
             )
             if (barChartData == null) {
                 CircularProgressIndicator()
             }
         }
-
     }
 }
 
