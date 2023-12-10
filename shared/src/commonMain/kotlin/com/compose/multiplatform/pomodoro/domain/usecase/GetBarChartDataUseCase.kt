@@ -36,7 +36,11 @@ class GetBarChartDataUseCase : KoinComponent {
 
         logger.d { "Getting data for week $monday - $sunday" }
 
-        val workPackages = workPackageRepository.getWorkPackagesInDataRange(fromDate = monday, toDate = sunday)
+        val workPackages = workPackageRepository.getWorkPackagesInDataRange(
+            fromDate = monday,
+            // Add one day, which practically makes this return a range ending at Monday midnight.
+            toDate = sunday.plus(1, DateTimeUnit.DAY)
+        )
 
         val barChartEntries = buildList {
             DayOfWeek.values().forEach { dayOfWeek ->
