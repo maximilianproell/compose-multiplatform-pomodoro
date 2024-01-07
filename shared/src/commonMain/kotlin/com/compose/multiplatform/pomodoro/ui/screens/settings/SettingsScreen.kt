@@ -16,6 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -64,7 +65,13 @@ object SettingsScreen : Screen {
             }
         ) { paddingValues ->
             Box(contentAlignment = Alignment.Center) {
-                Column(modifier = Modifier.padding(paddingValues).padding(16.dp).fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .padding(16.dp)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -100,9 +107,27 @@ object SettingsScreen : Screen {
                         )
                     }
 
-                    if (screenState.isLoading) {
-                        CircularProgressIndicator()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = stringResource(MR.strings.settings_keep_screen_on),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+
+                        Switch(
+                            checked = screenState.keepScreenOn,
+                            onCheckedChange = { isChecked ->
+                                screenModel.updateKeepScreenOnSetting(isChecked)
+                            }
+                        )
                     }
+                }
+                if (screenState.isLoading) {
+                    CircularProgressIndicator()
                 }
             }
         }

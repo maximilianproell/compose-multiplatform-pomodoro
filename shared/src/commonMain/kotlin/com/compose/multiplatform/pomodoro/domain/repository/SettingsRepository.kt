@@ -18,7 +18,6 @@ interface SettingsRepository {
      */
     suspend fun removeTimerFinishTimestamp()
 
-
     /**
      * Saves the timer duration in minutes.
      */
@@ -33,4 +32,14 @@ interface SettingsRepository {
      * Returns a [Flow] emitting the most recently set timer duration in minutes.
      */
     fun observeTimerDurationMinutes(): Flow<Int>
+
+    /**
+     * Saves the "Keep screen on" setting.
+     */
+    suspend fun saveKeepScreenOn(keepOn: Boolean)
+
+    /**
+     * Returns a [Flow] emitting the most recently set "Keep screen on" setting.
+     */
+    fun observeKeepScreeOn(): Flow<Boolean>
 }

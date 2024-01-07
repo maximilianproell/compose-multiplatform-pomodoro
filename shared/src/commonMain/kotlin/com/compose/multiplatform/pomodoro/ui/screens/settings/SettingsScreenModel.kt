@@ -5,6 +5,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.compose.multiplatform.pomodoro.domain.repository.SettingsRepository
 import com.compose.multiplatform.pomodoro.service.TimerService
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -22,21 +23,29 @@ class SettingsScreenModel : StateScreenModel<SettingsScreenModel.SettingsScreenS
         val isLoading: Boolean = true,
         val pomodoroTimerMinutes: Int? = null,
         val inputBlocked: Boolean = false,
+        val keepScreenOn: Boolean = false,
     )
 
     init {
         screenModelScope.launch {
             val minutesDuration = settingsRepository.getTimerDurationMinutes()
-            mutableState.update { it.copy(
-                pomodoroTimerMinutes = minutesDuration,
-                isLoading = false,
-            ) }
+            val keepScreenOn = settingsRepository.observeKeepScreeOn().first()
+            mutableState.update {
+                it.copy(
+                    pomodoroTimerMinutes = minutesDuration,
+                    isLoading = false,
+                    keepScreenOn = keepScreenOn,
+                )
+            }
 
-            timerService.timerStateFlow.collect { timerState ->
-                // Block changes to settings while timer is running.
-                val inputBlocked = timerState is TimerService.TimerState.Running || timerState is TimerService.TimerState.Paused
-                mutableState.update { settingsScreenState ->
-                    settingsScreenState.copy(inputBlocked = inputBlocked)
+            launch {
+                timerService.timerStateFlow.collect { timerState ->
+                    // Block changes to settings while timer is running.
+                    val inputBlocked =
+                        timerState is TimerService.TimerState.Running || timerState is TimerService.TimerState.Paused
+                    mutableState.update { settingsScreenState ->
+                        settingsScreenState.copy(inputBlocked = inputBlocked)
+                    }
                 }
             }
         }
@@ -48,11 +57,19 @@ class SettingsScreenModel : StateScreenModel<SettingsScreenModel.SettingsScreenS
         }
     }
 
+    fun updateKeepScreenOnSetting(keepScreenOn: Boolean) {
+        mutableState.update {
+            it.copy(keepScreenOn = keepScreenOn)
+        }
+    }
+
     private fun saveSettings() {
         val setTimerMinutes = state.value.pomodoroTimerMinutes
+        val keepScreenOn = state.value.keepScreenOn
         if (setTimerMinutes != null) {
             applicationScope.launch {
                 settingsRepository.saveTimerDurationMinutes(setTimerMinutes)
+                settingsRepository.saveKeepScreenOn(keepScreenOn)
             }
         }
     }
