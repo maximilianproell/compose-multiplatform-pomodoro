@@ -16,6 +16,7 @@ import com.compose.multiplatform.pomodoro.MR
 import com.compose.multiplatform.pomodoro.MainActivity
 import com.compose.multiplatform.pomodoro.R
 import com.compose.multiplatform.pomodoro.domain.usecase.FormatSecondsForTimerUseCase
+import com.compose.multiplatform.pomodoro.service.NotificationService.Companion.notificationChannelId
 import com.compose.multiplatform.pomodoro.utils.getString
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -28,9 +29,7 @@ import org.koin.core.component.inject
 class AndroidTimerStatusService : LifecycleService(), KoinComponent {
 
     private val timerService: TimerService by inject()
-    private val notificationChannelId = "pomodoro_timer_channel"
     private val stickyNotificationId = 100
-    private val finishNotificationId = 101
     private val logger = Logger.withTag(this::class.simpleName.toString())
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -63,13 +62,6 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
             )
             .setContentIntent(pendingIntent)
 
-        val alarmNotificationBuilder = NotificationCompat.Builder(this, notificationChannelId)
-            .setSmallIcon(R.drawable.baseline_timer_24)
-            .setContentTitle(getString(MR.strings.notification_timer_finished_title))
-            .setContentText(getString(MR.strings.notification_timer_finished_description))
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-
         try {
             ServiceCompat.startForeground(
                 /* service = */ this,
@@ -96,11 +88,6 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
                 )
 
                 if (timerState is TimerService.TimerState.Initial) {
-                    notificationManager.cancel(stickyNotificationId)
-                    notificationManager.notify(
-                        finishNotificationId,
-                        alarmNotificationBuilder.build()
-                    )
                     stopSelf()
                 } else {
                     notificationManager.notify(
@@ -112,5 +99,12 @@ class AndroidTimerStatusService : LifecycleService(), KoinComponent {
         }
 
         return START_STICKY
+    }
+
+    override fun onDestroy() {
+        val notificationManager = NotificationManagerCompat.from(applicationContext)
+        notificationManager.cancel(stickyNotificationId)
+
+        super.onDestroy()
     }
 }
