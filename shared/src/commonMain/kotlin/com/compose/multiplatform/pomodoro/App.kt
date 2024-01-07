@@ -16,3 +16,6 @@ fun App() {
 }
 
 expect fun isIos(): Boolean
+
+@Composable
+expect fun KeepScreenOnHandler(keepScreenOn: Boolean)

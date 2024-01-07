@@ -37,6 +37,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.compose.multiplatform.pomodoro.KeepScreenOnHandler
 import com.compose.multiplatform.pomodoro.MR
 import com.compose.multiplatform.pomodoro.service.TimerService
 import com.compose.multiplatform.pomodoro.ui.components.Timer
@@ -59,6 +60,8 @@ object MainScreen : Screen {
 
         val navigator = LocalNavigator.currentOrThrow
         val screenState by mainScreenModel.state.collectAsState()
+
+        KeepScreenOnHandler(keepScreenOn = screenState.keepScreenOn)
 
         mainScreenModel.permissionController.NotificationPermissionRequester(
             askForPermission = screenState.showNotificationPermissionRequest,
