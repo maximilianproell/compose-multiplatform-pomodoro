@@ -37,6 +37,7 @@ kotlin {
                 // Navigation with voyager
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.transitions)
+                implementation(libs.voyager.screenmodel)
 
                 // Moko resources
                 api(libs.moko.resources)

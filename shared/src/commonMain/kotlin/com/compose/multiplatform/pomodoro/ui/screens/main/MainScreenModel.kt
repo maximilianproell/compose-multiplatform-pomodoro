@@ -1,7 +1,7 @@
 package com.compose.multiplatform.pomodoro.ui.screens.main
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class MainScreenModel : StateScreenModel<MainScreenModel.MainScreenState>(MainSc
     )
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             timerService.timerStateFlow.collect { timerState ->
                 mutableState.update {
                     it.copy(timerState = timerState)

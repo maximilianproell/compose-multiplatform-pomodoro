@@ -4,7 +4,7 @@ appcompat = "1.6.1"
 composeMultiplatformChart = "2.0.3"
 coreKtx = "1.12.0"
 sqlDelight = "2.0.0"
-voyager = "1.0.0-rc07"
+voyager = "1.0.0"
 moko = "0.23.0"
 kotlinxDatetime = "0.4.0"
 kermit = "2.0.2"
@@ -25,6 +25,7 @@ sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", 
 sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko" }
 touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }

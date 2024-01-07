@@ -1,7 +1,7 @@
 package com.compose.multiplatform.pomodoro.ui.screens.settings
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.compose.multiplatform.pomodoro.domain.repository.SettingsRepository
 import com.compose.multiplatform.pomodoro.service.TimerService
 import kotlinx.coroutines.MainScope
@@ -25,7 +25,7 @@ class SettingsScreenModel : StateScreenModel<SettingsScreenModel.SettingsScreenS
     )
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             val minutesDuration = settingsRepository.getTimerDurationMinutes()
             mutableState.update { it.copy(
                 pomodoroTimerMinutes = minutesDuration,

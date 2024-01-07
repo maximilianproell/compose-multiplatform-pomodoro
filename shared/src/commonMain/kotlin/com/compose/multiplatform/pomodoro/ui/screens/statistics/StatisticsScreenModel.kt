@@ -1,7 +1,7 @@
 package com.compose.multiplatform.pomodoro.ui.screens.statistics
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.compose.multiplatform.pomodoro.domain.repository.WorkPackageRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -27,7 +27,7 @@ class StatisticsScreenModel :
     )
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             val workPackages = workPackageRepository.observeAllWorkPackages().first()
             val oldestDate = workPackages.firstOrNull()?.endDate
 
