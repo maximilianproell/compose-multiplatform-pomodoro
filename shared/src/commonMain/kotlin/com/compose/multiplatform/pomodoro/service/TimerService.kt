@@ -12,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -112,7 +113,7 @@ class TimerService(
         // Immediately emit the initial seconds left.
         emit(initialSeconds)
         while (true) {
-            delay(1.seconds)
+            delay(200)
             val currentEpochTimestamp = Clock.System.now().epochSeconds
 
             // Subtract seconds passed since timer was started.
@@ -120,7 +121,7 @@ class TimerService(
             emit(initialSeconds - secondsPassed)
         }
         // Buffer values so that timer runs without hindrance.
-    }.conflate()
+    }.conflate().distinctUntilChanged()
 
 
     /**
